@@ -4,12 +4,13 @@
 	background-color: black;
 }
 main{
+	
 	color: white;
 }
 
 
 .head_title{
-  text-align: center;
+  
  font-family: "Anton", sans-serif;
 	color:white;
 	font-size:3rem;
@@ -19,7 +20,7 @@ main{
 	background-clip:text;
 	-webkit-text-fill-color:transparent;
 	 animation: animate 8s linear infinite;
-	 
+	 text-align: center;
 }
 @keyframes animate{
 	from{
@@ -37,11 +38,8 @@ main{
 	
 }
 .intro{
-	display:flex;
 	margin-bottom: 0px;
-	text-align: center;
 }
-
 /*타이틀 끝*/
 
 

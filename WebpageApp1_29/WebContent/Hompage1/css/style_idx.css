@@ -106,14 +106,8 @@ padding: 10px 20px;
 }
 
 
-/*height:0~790px footer relative속성*/
-@media screen and (max-height: 790px){
-.footer_style {
-	
-	position: relative;
 
-}
-}
+
 /*width:0~768px일때만 햄버거 버튼이 나온다*/
 @media screen and (max-width: 768px){
 	.footer_alarm{
@@ -124,7 +118,7 @@ padding: 10px 20px;
 
 	.footer_style {
 
-  position:fixed;
+  
  font-size:12px;
 
 

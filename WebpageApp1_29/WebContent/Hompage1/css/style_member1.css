@@ -118,6 +118,11 @@ table,form
 	border:3px solid rgba(0, 134, 179,0.25);
 	border-spacing:15px;
 }
+.tbl{
+	background-color: #99ebff;
+	border-spacing:10px 10px;
+	margin-bottom:60px;
+}
 
 /*--------------컨텐트---------------*/
 

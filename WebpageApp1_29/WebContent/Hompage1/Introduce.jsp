@@ -8,9 +8,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main</title>
+    <title>소개</title>
     <link rel="stylesheet" href="css/style_idx.css">
-    <link rel="stylesheet" href="css/Intro1.css">
+    <link rel="stylesheet" href="css/Intro.css">
     <script src="https://use.fontawesome.com/releases/v5.15.1/js/all.js" ></script>
     <script src="javascript/main.js" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
@@ -25,11 +25,11 @@
 
             <ul class="navbar_menu">
                 <li><a href="Introduce.jsp">Introduce</a></li>
-                <li><a href="">Board</a></li>
+                <li><a href="list.jsp">Board</a></li>
                 <li><a href="">Statistics</a></li>     
             </ul>
             <ul class="navbar_reg">
-                <li><i class="fas fa-sign-in-alt"></i><a href="">&nbsp;login</a></li> 
+                <li><i class="fas fa-sign-in-alt"></i><a href="login.jsp">&nbsp;login</a></li> 
                 <li><i class="fas fa-registered"></i><a href="member.jsp" target="_sub">&nbsp;register</a></li>
                 
             </ul>
@@ -52,14 +52,14 @@
 	   	 	<li><strong>아이디어</strong>
 	   	 		 <p class="content">
 	   	 		 " 매일매일 여러 소식들이 넘쳐납니다
-	   	 		 게시판의 다양한 유저분들과 함께<br>
+	   	 		 게시판의 다양한 유저분들과 함께
 	   	 		 IT주제로 애기해보는 것 어떨까요?"
 	   	 		 </p>
 	   	 	</li>
 	   	 	<li><strong>캐쥬얼</strong>
 	   	 		 <p class="content">
 	   	 		 " 간단할수록 좋습니다
-	   	 		 여러분들이 가지고 있는<br>생각을
+	   	 		 여러분들이 가지고 있는 생각을
 	   	 		 글로써 쉽게 적어보세요.
 	   	 		 "
 	   	 		 </p>
@@ -67,7 +67,7 @@
 	   	 	<li><strong>나눔</strong>
 	   	 		 <p class="content">
 	   	 		 " '백지장도 맞들면 낫다'
-	   	 		 이런말도 있잖아요 서로의<br>지식을 
+	   	 		 이런말도 있잖아요 서로의 지식을 
 	   	 		 나누다보면 더 유익한 지식이 될거에요!
 	   	 		 "
 	   	 		 </p>

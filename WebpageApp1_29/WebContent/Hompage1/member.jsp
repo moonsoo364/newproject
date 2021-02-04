@@ -7,13 +7,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원가입</title>
-    <link rel="stylesheet" href="css/style_member.css">
+    <link rel="stylesheet" href="css/style_member1.css">
     <script src="https://use.fontawesome.com/releases/v5.15.1/js/all.js" ></script>
     <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script src="javascript/main.js" defer></script>
     <script src="javascript/AddressApi.js" ></script>
     <script type="text/javascript" src="javascript/register.js"></script>
+    <script>
+	  function idCheck(id) {
+			form = document.register_form;
+			if (id == "") {
+				alert("아이디를 입력해 주세요.");
+				form.id.focus();
+				return;
+			}
+			url = "idCheck.jsp?id=" + id;
+			window.open(url, "IDCheck", "width=300,height=150");
+		}
+	  </script>
     <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
+    
     <!-- 아이디 중복확인 함수-->
     
 </head>
@@ -26,12 +39,12 @@
 
             <ul class="navbar_menu">
                 <li><a href="Introduce.jsp">Introduce</a></li>
-                <li><a href="">Board</a></li>
+                <li><a href="list.jsp">Board</a></li>
                 <li><a href="">Statistics</a></li>     
             </ul>
             <ul class="navbar_reg">
-                <li><i class="fas fa-sign-in-alt"></i><a href="member.jsp">&nbsp;login</a></li> 
-                <li><i class="fas fa-registered"></i><a href="">&nbsp;register</a></li>
+                <li><i class="fas fa-sign-in-alt"></i><a href="login.jsp">&nbsp;login</a></li> 
+                <li><i class="fas fa-registered"></i><a href="member.jsp">&nbsp;register</a></li>
                 
             </ul>
 
@@ -44,7 +57,7 @@
     		<h1 class=h1_title>정보 입력</h1>
     		<p class="p_info">회원가입</p>
     		<center>
-    			<table cellspacing="2" bgcolor="#99ebff">
+    			<table class="tbl">
     				<FORM name=register_form action="memberProc.jsp">
     						<tr>
     							<td >아이디</td>
@@ -106,13 +119,14 @@
     							<td><input name="detailaddress"  size="20" id="detailAddress" ></td>
     						</tr>
     						
-							
+							<tr>
 							<td>가입유형</td>
-								<td><select name=usertype>
+								<td><select name="usertype">
 										<option value="0" selected>선택하세요.
 										<option value="관리자">관리자
 										<option value="유저">유저
-								</select></td>	
+								</select></td>
+							</tr>
 							<tr>
 							<td colspan="3" align="center">
 								   <input type="button" value="회원가입" onclick="inputCheck()">

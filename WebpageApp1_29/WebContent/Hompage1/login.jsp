@@ -6,12 +6,13 @@
     <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic:400" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main</title>
+    <title>로그인</title>
     <link rel="stylesheet" href="css/style_idx.css">
     <link rel="stylesheet" href="css/style_login.css">
     <script src="https://use.fontawesome.com/releases/v5.15.1/js/all.js" ></script>
     <script src="javascript/main.js" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
+    <script src="javascript/loginchek"></script>
 </head>
 <body>
     <nav class="navbar">
@@ -22,11 +23,11 @@
 
             <ul class="navbar_menu">
                 <li><a href="Introduce.jsp">Introduce</a></li>
-                <li><a href="">Board</a></li>
+                <li><a href="list.jsp">Board</a></li>
                 <li><a href="">Statistics</a></li>     
             </ul>
             <ul class="navbar_reg">
-                <li><i class="fas fa-sign-in-alt"></i><a href="">&nbsp;login</a></li> 
+                <li><i class="fas fa-sign-in-alt"></i><a href="login.jsp">&nbsp;login</a></li> 
                 <li><i class="fas fa-registered"></i><a href="member.jsp" target="_sub">&nbsp;register</a></li>
                 
             </ul>
@@ -36,24 +37,35 @@
             </a>
     </nav>
     <!--여기서 부터 내용 입니다-->
-   <section class="login_form">
-   	<h1>login</h1>
-   	<form section="">
-   		<div class="login_area">
-   			<input type="text" name="id" id="id" autocomlate="off" required>
-   			<label for="id">ID<label> 
-   		</div>
-   		<div class="login_area">
-   			<input type="password" name="pwd" id="pwd" autocomplet="off" required>
-   			<label for="pw">password</label> 
-   		</div>
-   		<div class="bottom_area">
-   		<button type="submit">login</button>
-   		</div>
+   <section class="login_section">
+   	    <div class="wrap_contents">
+    	<div class=content_header>
+    		<h1>로그인</h1>
+    		<center>
+    			<table cellspacing="2" bgcolor="#99ebff">
+    				<FORM name=register_form action="memberProc.jsp">
+    						<tr>
+    							<td >아이디</td>
+    							<td>
+    							<input name="id" type="text" size="15">
+    							</td>
+    						</tr>
+    						<tr>
+    							<td >비밀번호</td>
+    							<td>
+    							<input name="pwd" type="password"size="15">
+    							</td>
+    						</tr>
+    						<td colspan="3" align="center">
+    								<input type="button" value="로그인" >
+								   <input type="button" value="회원가입" onclick="javascript:location.href='member.jsp'">
+							</td>
+    				</form>
+    			</table>
+    		</center>
+    						
    	</form>
-   		<div class="caption">
-   			<a href="" class="search">Forget Password?</a>
-   		</div>
+   		
    </section>
 	<footer class="footer_style">
 		<div class="footer_alarm">
