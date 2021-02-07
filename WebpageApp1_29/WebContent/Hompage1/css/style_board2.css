@@ -1,4 +1,17 @@
 @charset "UTF-8";
+/*-------게시판 타이틀------*/
+.board_title{
+	margin:auto;
+	text-align:center;
+}
+
+.post_count{
+	font-size:16px;
+	
+	
+}
+
+/*-------게시판 타이틀------*/
 /*-------게시판 영역-------*/
 .board_table{
 	width:100%;
@@ -22,7 +35,7 @@
 	
 }
 .container{
-	margin-top: 50px;
+	margin-top: 20px;
 	margin-bottom: 50px;
 	
 	top:50%;
@@ -53,8 +66,7 @@
 	border:0px;
 }
 input,select{
-	height:25px;
-	
+	height:25px;	
 
 }
 /*------찾기 영역------*/

@@ -1,6 +1,31 @@
 <%@page import="org.w3c.dom.Document"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@page import="Board_module.BoardMgr"%>
+<%@page import="java.util.Vector" %>
+<jsp:useBean id="Bmgr" class="Board_module.BoardMgr"/>
+<%
+	request.setCharacterEncoding("UTF-8");
+	
+	int totalRecord=0; //전체 레코드 수
+	int numPerPage=10; //페이지 당 레코드 수
+	int nowPage=1;//현재 페이지
+	int totalPage=0;//전체 페이지 수
+	
+	int start=0; //DB에서 select 시작 번호
+	int end=10;	 //시작 번호에서 가져올 select의 갯수
+	
+	String keyField="", keyWord=""; //DB에서 필드명 
+	if(request.getParameter("nowPage") !=null){
+		nowPage=Integer.parseInt(request.getParameter("nowPage"));
+	}
+	start=(nowPage * numPerPage)-numPerPage;
+	end = numPerPage;
+	
+	totalRecord = Bmgr.getTotalCount(keyField, keyWord);
+	totalPage = (int)Math.ceil((double)totalRecord / numPerPage); //전체 페이지 수
+	
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,7 +36,7 @@
     <link rel="stylesheet" href="css/style_idx.css">
     <script src="https://use.fontawesome.com/releases/v5.15.1/js/all.js" ></script>
     <script src="javascript/main.js" defer></script>
-    <link rel="stylesheet" href="css/style_board1.css">
+    <link rel="stylesheet" href="css/style_board2.css">
     <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -36,6 +61,11 @@
                 <i class="fas fa-sliders-h"></i>
             </a>
     </nav>
+    <br/>
+	<h2 class="board_title">게시판에 오신걸 환영합니다!</h2>
+	<br/>
+	<div class="post_count">전체 게시글:<%=totalRecord %> 개(<font color="red">
+	<%=nowPage %>/<%=totalPage%>Pages</font>)</div>
     <div class="container">
     	<table class="board_table" >
     		<tr class="table_head">
