@@ -13,7 +13,9 @@ public class BoardBean {
 	private String pass;          
 	private String  ip;
 	private int count;        
-	private String filename; 
+	private String filename;
+	private String sort;
+	private String title;
 
 	private int filesize;
 	
@@ -94,5 +96,17 @@ public class BoardBean {
 	}
 	public void setFilesize(int filesize) {
 		this.filesize = filesize;
+	}
+	public String getSort() {
+		return sort;
+	}
+	public void setSort(String sort) {
+		this.sort = sort;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
 	}  
 }

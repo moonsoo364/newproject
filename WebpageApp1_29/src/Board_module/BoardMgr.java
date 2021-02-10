@@ -7,6 +7,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Vector;
@@ -88,13 +89,13 @@ public class BoardMgr {
 		try {
 			conn = pool.getConnection();
 			if (keyWord.equals("null")||keyWord.equals("")) {
-				sql="select count(num) from tableboard" + keyField +"like ?" ;
+				sql="select count(num) from tableboard" ;
 				pstmt = conn.prepareStatement(sql);
 				//키워드가 비워있을 때 키필드에서 count를 찾는다
 			} else {
 				sql = "select count(num) from tableboard where" + keyField + "like ?";
 				pstmt = conn.prepareStatement(sql);
-				pstmt.setString(1,"%"+keyWord+"%");
+				pstmt.setString(1,"%"+keyWord+"%");//num을 찾는다
 				//키워드가 있을 때
 			}
 			rs =pstmt.executeQuery();//sql문을 실행
@@ -110,51 +111,59 @@ public class BoardMgr {
 	}
 	
 	public void insertBoard(HttpServletRequest req) {
-		Connection con = null;
+		//게시판 글쓰기 기능 구현 
+		
+		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql = null;
-		MultipartRequest multi = null;
-		int filesize = 0;
+		MultipartRequest multi =null; // 파일 업로드를 위한 변수
+		int filesize = 0; //파일 크기
 		String filename = null;
 		try {
-			con = pool.getConnection();
-			sql = "select max(num) from tblBoard";
-			pstmt = con.prepareStatement(sql);
-			rs = pstmt.executeQuery();
-			int ref = 1;
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			System.out.println("Driver load Success!");
+			conn=pool.getConnection();
+			System.out.println("DB load Success!");
+			//연동 테스트 끝
+			sql = "select max(num) from tableboard"; //큰 숫자 찾는 sql
+			pstmt = conn.prepareStatement(sql);
+			rs =pstmt.executeQuery();
+			int ref =1;
 			if (rs.next())
-				ref = rs.getInt(1) + 1;
-			File file = new File(SAVEFOLDER);
-			if (!file.exists())
-				file.mkdirs();
-			multi = new MultipartRequest(req, SAVEFOLDER,MAXSIZE, ENCTYPE,
+				ref = rs.getInt(1) +1; 
+			File file =new File(SAVEFOLDER); //저장된 폴더 
+			if(!file.exists())
+				file.mkdir();// 파일이 존재하면 디렉토리 생성
+			multi = new MultipartRequest(req,SAVEFOLDER,MAXSIZE,ENCTYPE,
 					new DefaultFileRenamePolicy());
-
-			if (multi.getFilesystemName("filename") != null) {
-				filename = multi.getFilesystemName("filename");
-				filesize = (int) multi.getFile("filename").length();
+			if(multi.getFilesystemName("filename") != null) {
+				filename =multi.getFilesystemName("filename");//파일 이름을 가지고 온다
+				filesize = (int) multi.getFile("filename").length(); //파일의 크기를 가지고 온다
 			}
-			String content = multi.getParameter("content");
-			if (multi.getParameter("contentType").equalsIgnoreCase("TEXT")) {
-				content = UtilMgr.replace(content, "<", "&lt;");
-			}
-			sql = "insert tblBoard(name,content,subject,ref,pos,depth,regdate,pass,count,ip,filename,filesize)";
-			sql += "values(?, ?, ?, ?, 0, 0, now(), ?, 0, ?, ?, ?)";
-			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, multi.getParameter("name"));
-			pstmt.setString(2, content);
-			pstmt.setString(3, multi.getParameter("subject"));
-			pstmt.setInt(4, ref);
-			pstmt.setString(5, multi.getParameter("pass"));
-			pstmt.setString(6, multi.getParameter("ip"));
-			pstmt.setString(7, filename);
-			pstmt.setInt(8, filesize);
+			
+			
+				
+			//sql문으로 파라메터 가지고 오기
+			sql="insert tableboard(name,sort,title,content,ip,filename,filesize,pos)";
+			sql+="values(?,?,?,?,?,?,?,0)";
+			pstmt =conn.prepareStatement(sql);
+			pstmt.setString(1, multi.getParameter("name"));//게시판 작성자 가지고옴
+			pstmt.setString(2, multi.getParameter("sort"));//게시판 분류 가지고옴
+			pstmt.setString(3, multi.getParameter("title"));//게시판 제목을 가지고옴
+			pstmt.setString(4, multi.getParameter("content"));//게시판 내용을 가지고옴
+			pstmt.setString(5, multi.getParameter("ip"));//작상자의 IP를 가지고옴
+			pstmt.setString(6, filename);
+			pstmt.setInt(7, filesize);
 			pstmt.executeUpdate();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			pool.freeConnection(con, pstmt, rs);
+			
+			
+			
+			
+		}catch(Exception e) {
+			e.printStackTrace(); //예외 처리
+		}finally {
+			pool.freeConnection(conn,pstmt,rs);//데이터 반환
 		}
 	}
 	

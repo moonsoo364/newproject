@@ -16,6 +16,16 @@
 	int end=10;	 //시작 번호에서 가져올 select의 갯수
 	
 	String keyField="", keyWord=""; //DB에서 필드명 
+	if(request.getParameter("keyword")!=null){
+		keyWord =request.getParameter("keyWord");
+		keyField=request.getParameter("keyField");
+	}//키워드와 키필드를 요구한다
+	if(request.getParameter("reload")!=null){
+		if(request.getParameter("reload").equals("true")){
+			keyWord="";
+			keyField="";
+		}
+	}//리로딩
 	if(request.getParameter("nowPage") !=null){
 		nowPage=Integer.parseInt(request.getParameter("nowPage"));
 	}
@@ -36,7 +46,7 @@
     <link rel="stylesheet" href="css/style_idx.css">
     <script src="https://use.fontawesome.com/releases/v5.15.1/js/all.js" ></script>
     <script src="javascript/main.js" defer></script>
-    <link rel="stylesheet" href="css/style_board2.css">
+    <link rel="stylesheet" href="css/style_board.css">
     <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -64,7 +74,7 @@
     <br/>
 	<h2 class="board_title">게시판에 오신걸 환영합니다!</h2>
 	<br/>
-	<div class="post_count">전체 게시글:<%=totalRecord %> 개(<font color="red">
+	<div class="post_count">게시글 수:<%=totalRecord %>&nbsp;게시판 페이지:(<font color="red">
 	<%=nowPage %>/<%=totalPage%>Pages</font>)</div>
     <div class="container">
     	<table class="board_table" >
@@ -110,7 +120,7 @@
     			   </select>
     			   </td>
     				<td>
-    				<input name="search" type="text" size="25">
+    				<input name="search" type="text" size="50">
     				</td>
     				<td>
     				<input type="button" style="height:30px" value="찾기"onclick="javascript:location.href='list.jsp'">
