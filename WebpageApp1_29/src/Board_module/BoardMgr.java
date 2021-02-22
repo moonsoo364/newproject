@@ -38,43 +38,47 @@ public class BoardMgr {
 	
 	public Vector<BoardBean> getBoardList(String keyField, String keyWord,
 			int start, int end) {
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		String sql = null;
-		Vector<BoardBean> vlist = new Vector<BoardBean>();
+		Connection conn =null; //자바에서 DB로 sql 전송
+		PreparedStatement pstmt =null;//DB에서 자바로 sql 결과 전송
+		ResultSet rs =null;//sql문 실행 결과
+		String sql =null;//sql 실행 문장
+		Vector<BoardBean> vlist =new Vector<BoardBean>();
 		try {
-			con = pool.getConnection();
-			if (keyWord.equals("null") || keyWord.equals("")) {
-				sql = "select * from tblBoard order by ref desc, pos limit ?, ?";
-				pstmt = con.prepareStatement(sql);
-				pstmt.setInt(1, start);
-				pstmt.setInt(2, end);
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			System.out.println("Driver load Success!");
+			conn=pool.getConnection();
+			System.out.println("DB load Success!");
+			//연동 테스트 끝
+			if(keyWord.equals("null") || keyWord.equals("")) {
+				sql = "select * from tableboard order by ref desc, pos limit ?,?";
+				//참조를 기준으로 내림 차순, 포지션의 처음과 마지막까지값만 출력
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1,start);
+				pstmt.setInt(2,end);
 			} else {
-				sql = "select * from  tblBoard where " + keyField + " like ? ";
-				sql += "order by ref desc, pos limit ? , ?";
-				pstmt = con.prepareStatement(sql);
-				pstmt.setString(1, "%" + keyWord + "%");
+				sql ="select * from tableboard where " + keyField + "like ?";
+				sql += "ordef by ref desc, pos limit ? .?";
+				pstmt =conn.prepareStatement(sql);
+				pstmt.setString(1,"%" + keyWord + "%");
 				pstmt.setInt(2, start);
 				pstmt.setInt(3, end);
+				
 			}
 			rs = pstmt.executeQuery();
-			while (rs.next()) {
+			while(rs.next()) {
 				BoardBean bean = new BoardBean();
 				bean.setNum(rs.getInt("num"));
 				bean.setName(rs.getString("name"));
-				bean.setSubject(rs.getString("subject"));
-				bean.setPos(rs.getInt("pos"));
+				bean.setTitle(rs.getString("title"));
 				bean.setRef(rs.getInt("ref"));
-				bean.setDepth(rs.getInt("depth"));
-				bean.setRegdate(rs.getString("regdate"));
+				bean.setCount(rs.getInt("count"));
 				bean.setCount(rs.getInt("count"));
 				vlist.add(bean);
 			}
-		} catch (Exception e) {
+		}catch (Exception e){
 			e.printStackTrace();
 		} finally {
-			pool.freeConnection(con, pstmt, rs);
+			pool.freeConnection(conn,pstmt,rs);
 		}
 		return vlist;
 	}
@@ -134,7 +138,7 @@ public class BoardMgr {
 				ref = rs.getInt(1) +1; 
 			File file =new File(SAVEFOLDER); //저장된 폴더 
 			if(!file.exists())
-				file.mkdir();// 파일이 존재하면 디렉토리 생성
+				file.mkdir();// 파일이 없으면 디렉토리 생성
 			multi = new MultipartRequest(req,SAVEFOLDER,MAXSIZE,ENCTYPE,
 					new DefaultFileRenamePolicy());
 			if(multi.getFilesystemName("filename") != null) {
@@ -145,16 +149,17 @@ public class BoardMgr {
 			
 				
 			//sql문으로 파라메터 가지고 오기
-			sql="insert tableboard(name,sort,title,content,ip,filename,filesize,pos)";
-			sql+="values(?,?,?,?,?,?,?,0)";
+			sql="insert tableboard(name,sort,title,content,ip,filename,filesize,pos,count,ref)";
+			sql+="values(?,?,?,?,?,?,?,0,0,?)";
 			pstmt =conn.prepareStatement(sql);
 			pstmt.setString(1, multi.getParameter("name"));//게시판 작성자 가지고옴
 			pstmt.setString(2, multi.getParameter("sort"));//게시판 분류 가지고옴
 			pstmt.setString(3, multi.getParameter("title"));//게시판 제목을 가지고옴
 			pstmt.setString(4, multi.getParameter("content"));//게시판 내용을 가지고옴
-			pstmt.setString(5, multi.getParameter("ip"));//작상자의 IP를 가지고옴
-			pstmt.setString(6, filename);
-			pstmt.setInt(7, filesize);
+			pstmt.setString(5, multi.getParameter("ip"));//작성자의 IP를 가지고옴
+			pstmt.setString(6, filename);//파일 이름을 가지고옴
+			pstmt.setInt(7, filesize);//파일 크기를 가지고옴
+			pstmt.setInt(8,ref);//참조할 숫자를 가지고옴
 			pstmt.executeUpdate();
 			
 			
@@ -183,7 +188,7 @@ public class BoardMgr {
 			if (rs.next()) {
 				bean.setNum(rs.getInt("num"));
 				bean.setName(rs.getString("name"));
-				bean.setSubject(rs.getString("subject"));
+				bean.setTitle(rs.getString("title"));
 				bean.setContent(rs.getString("content"));
 				bean.setPos(rs.getInt("pos"));
 				bean.setRef(rs.getInt("ref"));
@@ -258,10 +263,10 @@ public class BoardMgr {
 		String sql = null;
 		try {
 			con = pool.getConnection();
-			sql = "update tblBoard set name = ?, subject=?, content = ? where num = ?";
+			sql = "update tblBoard set name = ?, title=?, content = ? where num = ?";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, bean.getName());
-			pstmt.setString(2, bean.getSubject());
+			pstmt.setString(2, bean.getTitle());
 			pstmt.setString(3, bean.getContent());
 			pstmt.setInt(4, bean.getNum());
 			pstmt.executeUpdate();
@@ -279,14 +284,14 @@ public class BoardMgr {
 		String sql = null;
 		try {
 			con = pool.getConnection();
-			sql = "insert tblBoard (name,content,subject,ref,pos,depth,regdate,pass,count,ip)";
+			sql = "insert tblBoard (name,content,title,ref,pos,depth,regdate,pass,count,ip)";
 			sql += "values(?,?,?,?,?,?,now(),?,0,?)";
 			int depth = bean.getDepth() + 1;
 			int pos = bean.getPos() + 1;
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, bean.getName());
 			pstmt.setString(2, bean.getContent());
-			pstmt.setString(3, bean.getSubject());
+			pstmt.setString(3, bean.getTitle());
 			pstmt.setInt(4, bean.getRef());
 			pstmt.setInt(5, pos);
 			pstmt.setInt(6, depth);
@@ -361,7 +366,7 @@ public class BoardMgr {
 		String sql = null;
 		try {
 			con = pool.getConnection();
-			sql = "insert tblBoard(name,content,subject,ref,pos,depth,regdate,pass,count,ip,filename,filesize)";
+			sql = "insert tblBoard(name,content,title,ref,pos,depth,regdate,pass,count,ip,filename,filesize)";
 			sql+="values('aaa', 'bbb', 'ccc', 0, 0, 0, now(), '1111',0, '127.0.0.1', null, 0);";
 			pstmt = con.prepareStatement(sql);
 			for (int i = 0; i < 1000; i++) {

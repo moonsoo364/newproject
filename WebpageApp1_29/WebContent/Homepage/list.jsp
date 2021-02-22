@@ -2,6 +2,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@page import="Board_module.BoardMgr"%>
+<%@page import="Board_module.BoardBean" %>
 <%@page import="java.util.Vector" %>
 <jsp:useBean id="Bmgr" class="Board_module.BoardMgr"/>
 <%
@@ -15,7 +16,10 @@
 	int start=0; //DB에서 select 시작 번호
 	int end=10;	 //시작 번호에서 가져올 select의 갯수
 	
+	int listSize=0; //현재 읽어온 게시물의 갯수
+	
 	String keyField="", keyWord=""; //DB에서 필드명 
+	Vector<BoardBean> vlist =null;
 	if(request.getParameter("keyword")!=null){
 		keyWord =request.getParameter("keyWord");
 		keyField=request.getParameter("keyField");
@@ -78,21 +82,51 @@
 	<%=nowPage %>/<%=totalPage%>Pages</font>)</div>
     <div class="container">
     	<table class="board_table" >
-    		<tr class="table_head">
-    			<td>번 호</td>
-    			<td>분 류</td>
-    			<td>제 목</td>
-    			<td>작성자</td>
-    			<td>조회수</td>
-    		</tr>
-    		<tr class="table_body">
-    			<td>1</td>
-    			<td>공지사항</td>
-    			<td>안녕하세요</td>
-    			<td>홍길동</td>
-    			<td>0</td>
-    		</tr>
-    		
+    	<tr>
+	    	<td colspan="2">
+	    	<!-- DB에서 게시물 리스트 가지고 오기 -->
+	    	<%
+	    		vlist =Bmgr.getBoardList(keyField, keyWord, start, end);
+	    		listSize = vlist.size();//브라우저 화면에 보여질 게시물 번호
+	    		if (vlist.isEmpty()) {
+	    			out.println("등록된 게시물이 없습니다");// 게시물이 없을 때 나오는 문구
+	    		} else{
+	    	
+	    	%>
+	    		<tr class="table_head">
+	    			<td>번 호</td>
+	    			<td>분 류</td>
+	    			<td>제 목</td>
+	    			<td>작성자</td>
+	    			<td>조회수</td>
+	    		</tr>
+	    		<%
+	    		  	for (int i = 0;i<numPerPage; i++){
+	    		  		if(i == listSize) break;
+	    		  		BoardBean bean = vlist.get(i);
+	    		  		int num = bean.getNum();//게시물 번호 찾기
+	    		  		String sort = bean.getSort();//게시물 분류 찾기
+	    		  		String title = bean.getTitle();//게시물 번호 찾기
+	    		  		String name = bean.getName();//작성자 찾기
+	    		  		int count =bean.getCount();//조회수 찾기
+	    		  
+	    		%>
+	    		<tr>	
+	    		<td><%=totalRecord -((nowPage-1)*numPerPage)-i %></td>
+	    		<td><%=sort %></td>
+	    		<td><%=title %>	    		
+	    		<td><%=name %></td>
+	    		<td><%=count %></td>
+	    		</tr>
+	    	<%}//for %>
+	    <%}//if %>
+	    
+	   </td>
+	  </tr>
+	    		
+	    	
+	    	
+	    		
     	</table>
     	<div class="bottom_content">
     	<a href="post.jsp" class="board_post">글쓰기</a> 
@@ -107,7 +141,7 @@
 
 		</script>
     	 <a class="move" href="#"> 다음&gt;&nbsp; </a>
-    	<a href="post.jsp" class="board_post">처음으로</a> 
+    	<a href="list.jsp" class="board_post">처음으로</a> 
     	</div>
     	<div class="search_bar">
     		<table>

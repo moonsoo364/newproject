@@ -4,7 +4,7 @@ public class BoardBean {
 	
 	private int num;
 	private String name;        
-	private String subject;      
+	     
 	private String content;     
 	private int pos;            
 	private int depth;        
@@ -31,12 +31,7 @@ public class BoardBean {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getSubject() {
-		return subject;
-	}
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
+	
 	public String getContent() {
 		return content;
 	}

@@ -29,7 +29,7 @@ public class BoardUpdateServlet extends HttpServlet {
 		BoardBean upBean = new BoardBean();
 		upBean.setNum(Integer.parseInt(request.getParameter("num")));
 		upBean.setName(request.getParameter("name"));
-		upBean.setSubject(request.getParameter("subject"));
+		
 		upBean.setContent(request.getParameter("content"));
 		upBean.setPass(request.getParameter("pass"));
 		upBean.setIp(request.getParameter("ip"));

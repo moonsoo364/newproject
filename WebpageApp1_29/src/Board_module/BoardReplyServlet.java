@@ -17,7 +17,7 @@ public class BoardReplyServlet extends HttpServlet {
 		BoardMgr bMgr = new BoardMgr();
 		BoardBean reBean = new BoardBean();
 		reBean.setName(request.getParameter("name"));
-		reBean.setSubject(request.getParameter("subject"));
+		
 		reBean.setContent(request.getParameter("content"));
 		reBean.setRef(Integer.parseInt(request.getParameter("ref"))); 
 		reBean.setPos(Integer.parseInt(request.getParameter("pos"))); 

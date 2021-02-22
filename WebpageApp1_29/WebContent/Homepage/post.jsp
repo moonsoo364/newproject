@@ -56,10 +56,10 @@
 				</td>
 				<td class="textleft">
     				<select name="sort" style="height:30px;">
-							<option value="notice">공지사항</option>
-							<option value="other">잡담</option>
-							<option value="humor">유머</option>
-							<option value="event">이벤트</option>
+							<option value="공지사항">공지사항</option>
+							<option value="잡담">잡담</option>
+							<option value="나눔">나눔</option>
+							<option value="이벤트">이벤트</option>
     			   </select>
     			</td>
     			</tr>
