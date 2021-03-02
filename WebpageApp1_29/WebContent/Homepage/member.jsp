@@ -13,7 +13,10 @@
     <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script src="javascript/main.js" defer></script>
     <script src="javascript/AddressApi.js" ></script>
-    <script type="text/javascript" src="javascript/register.js"></script>
+    <script src="javascript/Check.js" ></script>
+    <script src="javascript/register.js" ></script>
+    
+    
     <script>
 	  function idCheck(id) {
 			form = document.register_form;
@@ -130,14 +133,14 @@
 							</tr>
 							<tr>
 							<td colspan="3" align="center">
-								   <input type="button" value="회원가입" onclick="inputCheck()">
+								   <input type="button" value="회원가입" onclick="checkall()">
 							</td>
 							</tr>
     				</FORM>
     			</table>
     		</center>
     	</div>
-	
+	 
 			
 			
     </div>

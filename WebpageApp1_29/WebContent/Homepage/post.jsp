@@ -46,10 +46,7 @@
 					<td>제목</td>
 					<td><input name="title" size="50" maxlength="30"></td>
 				</tr>
-				<tr >
-					<td >작성자</td>
-					<td class="textleft"><input name="name" size="10" maxlength="8"></td>
-				</tr>
+				
 				<tr>
 				<td>
 					분류
