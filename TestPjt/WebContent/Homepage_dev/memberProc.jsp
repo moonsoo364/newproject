@@ -10,7 +10,7 @@
 	String location="member.jsp";
 	if(result){
 		msg="회원가입 하셨습니다";
-		location="Index_jsp";
+		location="Index.jsp";
 	}
 %>
 <script type="text/javascript">

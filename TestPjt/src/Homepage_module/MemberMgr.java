@@ -40,6 +40,7 @@ public class MemberMgr {
 			con = pool.getConnection();
             System.out.println("데이터베이스 접속 성공!");
             String Sql="select * from tablemember where id=?";
+            //테이블에서 아이디를 찾아서 중복 되는 게 있는 지 확인
 			stmt = con.prepareStatement(Sql);
             stmt.setString(1,id);
             flag=stmt.executeQuery().next();
@@ -65,9 +66,13 @@ public class MemberMgr {
 		String sql = null;
 		boolean flag = false;
 		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			System.out.println("드라이버 로드 성공!");
+			//con = pool.getConnection();
+           // System.out.println("데이터베이스 접속 성공!");
 			con = pool.getConnection();
 			sql = "insert tablemember(id,pwd,name,gender,birthday,email"
-					+",zipcode,address,detailaddress,usertype)values(?,?,?,?,?,?,?,?,?,?)";
+					+",zipcode,address,detailaddress,membertype)values(?,?,?,?,?,?,?,?,?,?)";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, bean.getId());
 			pstmt.setString(2, bean.getPwd());
@@ -78,8 +83,8 @@ public class MemberMgr {
 			pstmt.setString(7, bean.getZipcode());
 			pstmt.setString(8, bean.getAddress());
 			pstmt.setString(9, bean.getDetailaddress());
-			pstmt.setString(10, bean.getUsertype());
-			
+			pstmt.setString(10, bean.getMembertype());
+
 			if (pstmt.executeUpdate() == 1)
 				flag = true;
 		} catch (Exception e) {
@@ -112,10 +117,7 @@ public class MemberMgr {
 		}
 		return flag;
 	}
-	
-	/*************
-	 * ch17 필요한 메소드
-	 * ************/
+
 
 	// 회원정보가져오기
 	public MemberBean getMember(String id) {

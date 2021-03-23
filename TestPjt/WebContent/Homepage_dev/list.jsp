@@ -116,7 +116,6 @@
 	    		<td><%=totalRecord -((nowPage-1)*numPerPage)-i %></td>
 	    		<td><%=sort %></td>
 	    		<td><%=title %>	    		
-	    		<td><%=name %></td>
 	    		<td><%=count %></td>
 	    		</tr>
 	    	<%}//for %>

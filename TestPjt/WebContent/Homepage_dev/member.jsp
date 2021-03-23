@@ -8,13 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원가입</title>
     <link rel="stylesheet" href="css/style_member.css">
-        <link rel="stylesheet" href="css/style_index.css">
+    <link rel="stylesheet" href="css/style_index.css">
     <script src="https://use.fontawesome.com/releases/v5.15.1/js/all.js" ></script>
     <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script src="javascript/main.js" defer></script>
     <script src="javascript/AddressApi.js" ></script>
-    <script src="javascript/Check.js" ></script>
-    <script src="javascript/register.js" ></script>
+   	<script src="javascript/check.js" ></script>
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
     
     
     <script>
@@ -29,8 +29,7 @@
 			window.open(url, "IDCheck", "width=300,height=150");
 		}
 	  </script>
-    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
-    
+ 
     <!-- 아이디 중복확인 함수-->
     
 </head>
@@ -63,7 +62,7 @@
     		<p class="p_info">회원가입</p>
     		<center>
     			<table class="tbl">
-    				<FORM name=register_form action="memberProc.jsp">
+    				<form name=register_form action="memberProc.jsp">
     						<tr>
     							<td >아이디</td>
     							<td>
@@ -97,7 +96,7 @@
 									</td>
 							</tr>
 							<tr>
-								<td>생년월일</td>
+								<td>생년월일</td> 
 								<td><input name="birthday" size="6">
 									ex)830815</td>
 								
@@ -126,20 +125,23 @@
     						
 							<tr>
 							<td>가입유형</td>
-								<td><select name="usertype">
-										<option value="0" selected>선택하세요.
+								<td><select name="membertype">
+										<option value="" selected>선택하세요.
 										<option value="관리자">관리자
 										<option value="유저">유저
 								</select></td>
 							</tr>
 							<tr>
 							<td colspan="3" align="center">
-								   <input type="button" value="회원가입" onclick="checkall()">
+								   <input type="submit" value="회원가입" >
+								   <!-- 로그인 확인을 쉽게 하기위해 CheckAll 유효성검사 뺐음 기능 구현 됬으면 다시 넣아야함! -->
 							</td>
 							</tr>
-    				</FORM>
+					</form>	
     			</table>
+    		
     		</center>
+	
     	</div>
 	 
 			

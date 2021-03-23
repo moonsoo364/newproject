@@ -56,7 +56,7 @@
     				<select name="sort" style="height:30px;">
 							<option value="공지사항">공지사항</option>
 							<option value="잡담">잡담</option>
-							<option value="나눔">나눔</option>
+							<option value="리뷰">리뷰</option>
 							<option value="이벤트">이벤트</option>
     			   </select>
     			</td>
