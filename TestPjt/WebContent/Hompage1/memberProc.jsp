@@ -2,7 +2,7 @@
 <%request.setCharacterEncoding("UTF-8"); %>
 
 <jsp:useBean id="bean" class="Homepage_module.MemberBean"></jsp:useBean>
-<jsp:useBean id="mMgr" class="Homepage_module.MemberMgr"></jsp:useBean>
+<jsp:useBean id="mMgr" class="Homepage_module.MemberMng"></jsp:useBean>
 <jsp:setProperty property="*" name="bean"/>
 <%
 	boolean result=mMgr.insertMember(bean);

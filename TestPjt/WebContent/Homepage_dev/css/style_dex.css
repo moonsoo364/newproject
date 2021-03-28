@@ -45,6 +45,24 @@ padding: 5px 24px;
     padding-left: 0px;
     
 }
+
+	
+
+.login_box{
+	list-style: none;
+    color:black;
+    font-weight:bold;
+    font-size:16px;
+    background-color: yellow;
+    display:flex;
+    padding:15px;
+    
+    
+	
+}
+#log_ment{
+	vertical-align: middle;
+}
 .navbar_reg li{
 font-size: 20px;
 padding: 10px 20px;   

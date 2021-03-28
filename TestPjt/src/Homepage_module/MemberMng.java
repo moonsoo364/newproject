@@ -14,11 +14,11 @@ import java.sql.*;
 import Homepage_module.MemberBean;
 
 
-public class MemberMgr {
+public class MemberMng {
 
 	private DBConnectionMgr pool;
 	String url="jdbc:mysql://127.0.0.1:3306/homepagedb?user=root&password=Tink13542";
-	public MemberMgr() {
+	public MemberMng() {
 		try {
 			pool = DBConnectionMgr.getInstance();
 		} catch (Exception e) {
@@ -68,9 +68,9 @@ public class MemberMgr {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			System.out.println("드라이버 로드 성공!");
-			//con = pool.getConnection();
-           // System.out.println("데이터베이스 접속 성공!");
 			con = pool.getConnection();
+           // System.out.println("데이터베이스 접속 성공!");
+           //con = pool.getConnection();
 			sql = "insert tablemember(id,pwd,name,gender,birthday,email"
 					+",zipcode,address,detailaddress,membertype)values(?,?,?,?,?,?,?,?,?,?)";
 			pstmt = con.prepareStatement(sql);
@@ -97,23 +97,23 @@ public class MemberMgr {
 
 	// 로그인
 	public boolean loginMember(String id, String pwd) {
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		String sql = null;
-		boolean flag = false;
+		Connection con =null;
+		PreparedStatement pstmt =null;
+		ResultSet rs =null;
+		String sql =null;
+		boolean flag =false;
 		try {
-			con = pool.getConnection();
-			sql = "select id from boardmember where id = ? and pwd = ?";
+			con=pool.getConnection();
+			sql="select id from tablemember where id= ? and pwd=?";
 			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, id);
-			pstmt.setString(2, pwd);
-			rs = pstmt.executeQuery();
-			flag = rs.next();
+			pstmt.setString(1,id);
+			pstmt.setString(2,pwd);
+			rs=pstmt.executeQuery();
+			flag =rs.next();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			pool.freeConnection(con, pstmt, rs);
+			pool.freeConnection(con,pstmt,rs);
 		}
 		return flag;
 	}

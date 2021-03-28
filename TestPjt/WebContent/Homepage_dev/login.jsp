@@ -12,10 +12,11 @@
     <script src="https://use.fontawesome.com/releases/v5.15.1/js/all.js" ></script>
     <script src="javascript/main.js" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
-    <script src="javascript/loginchek"></script>
+    <script src="javascript/login.js"></script>
 </head>
 <body>
 <!-- navbar는 모든 페이지에 적용 됩니다.-->
+
     <nav class="navbar">
             <div class="navbar_title">
                 <i class="fas fa-chalkboard-teacher"></i>
@@ -27,6 +28,7 @@
                 <li><a href="list.jsp">Board</a></li>
                 <li><a href="Static.jsp">Statistics</a></li>     
             </ul>
+            
             <ul class="navbar_reg">
                 <li><i class="fas fa-sign-in-alt"></i><a href="login.jsp">&nbsp;login</a></li> 
                 <li><i class="fas fa-registered"></i><a href="member.jsp" target="_sub">&nbsp;register</a></li>
@@ -44,7 +46,7 @@
     		<h1>로그인</h1>
     		<center>
     			<table cellspacing="2" bgcolor="#99ebff">
-    				<FORM name=register_form action="memberProc.jsp">
+    				<FORM name=login_form action="loginProc.jsp">
     						<tr>
     							<td >아이디</td>
     							<td>
@@ -58,7 +60,7 @@
     							</td>
     						</tr>
     						<td colspan="3" align="center">
-    								<input type="button" value="로그인" >
+    								<input type="button" value="로그인" onclick="logChk()">
 								   <input type="button" value="회원가입" onclick="javascript:location.href='member.jsp'">
 							</td>
     				</form>
