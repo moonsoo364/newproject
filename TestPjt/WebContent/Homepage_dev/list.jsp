@@ -18,12 +18,14 @@
 	
 	int listSize=0; //현재 읽어온 게시물의 갯수
 	
+	String value=null;
 	String keyField="", keyWord=""; //DB에서 필드명 
 	Vector<BoardBean> vlist =null;
 	if(request.getParameter("keyword")!=null){
 		keyWord =request.getParameter("keyWord");
 		keyField=request.getParameter("keyField");
 	}//키워드와 키필드를 요구한다
+	
 	if(request.getParameter("reload")!=null){
 		if(request.getParameter("reload").equals("true")){
 			keyWord="";
@@ -38,6 +40,8 @@
 	
 	totalRecord = Bmgr.getTotalCount(keyField, keyWord);
 	totalPage = (int)Math.ceil((double)totalRecord / numPerPage); //전체 페이지 수
+	
+	
 	
 %>
 <!DOCTYPE html>
@@ -54,6 +58,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
 </head>
 <body>
+<%!String Idkey=null; %>
+<%
+if(session.getAttribute("key")!=null){
+	Idkey=(String) session.getAttribute("key");
+	System.out.print(Idkey);
+	
+}else{
+	Idkey=null;
+}
+
+%>
 <!-- navbar는 모든 페이지에 적용 됩니다.-->
     <nav class="navbar">
             <div class="navbar_title">
@@ -66,11 +81,25 @@
                 <li><a href="list.jsp">Board</a></li>
                 <li><a href="Static.jsp">Statistics</a></li>     
             </ul>
-            <ul class="navbar_reg">
+            <%if(Idkey == null) { %>
+  			
+  			<ul class="navbar_reg">
                 <li><i class="fas fa-sign-in-alt"></i><a href="login.jsp">&nbsp;login</a></li> 
                 <li><i class="fas fa-registered"></i><a href="member.jsp" target="_sub">&nbsp;register</a></li>
-                
             </ul>
+       
+        <%} else { %> 
+        <div id="login_box">
+  			
+  			<div><i class="far fa-user-circle fa-3x" id="user_icon"></i></div>
+  			<div id="log_ment">&nbsp;&nbsp;안녕하세요! <%=Idkey %>님<br>&nbsp;&nbsp;오늘도 즐거운 하루 되세요.
+  			<input type="button" value="로그아웃" onclick="javascript:location.href='logout.jsp'">
+  			</div>
+  			
+        </div>
+        	
+        
+       <%}%>
 
             <a href="#" class="navbar_togle">
                 <i class="fas fa-sliders-h"></i>
@@ -129,7 +158,11 @@
 	    		
     	</table>
     	<div class="bottom_content">
+    	<%if(session.getAttribute("key")!=null){%>
+		
     	<a href="post.jsp" class="board_post">글쓰기</a> 
+    	
+    	<%}%>
     	 <a class="move" href="#">&nbsp; &lt;이전 </a>
     	<script language="Javascript">
 

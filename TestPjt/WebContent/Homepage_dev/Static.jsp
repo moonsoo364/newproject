@@ -15,6 +15,17 @@
     
 </head>
 <body>
+<%!String Idkey=null; %>
+<%
+if(session.getAttribute("key")!=null){
+	Idkey=(String) session.getAttribute("key");
+	System.out.print(Idkey);
+	
+}else{
+	Idkey=null;
+}
+
+%>
 <!-- navbar는 모든 페이지에 적용 됩니다.-->
     <nav class="navbar">
             <div class="navbar_title">
@@ -27,11 +38,25 @@
                 <li><a href="list.jsp">Board</a></li>
                 <li><a href="Static.jsp">Statistics</a></li>     
             </ul>
-            <ul class="navbar_reg">
+            <%if(Idkey == null) { %>
+  			
+  			<ul class="navbar_reg">
                 <li><i class="fas fa-sign-in-alt"></i><a href="login.jsp">&nbsp;login</a></li> 
                 <li><i class="fas fa-registered"></i><a href="member.jsp" target="_sub">&nbsp;register</a></li>
-                
             </ul>
+       
+        <%} else { %> 
+        <div id="login_box">
+  			
+  			<div><i class="far fa-user-circle fa-3x" id="user_icon"></i></div>
+  			<div id="log_ment">&nbsp;&nbsp;안녕하세요! <%=Idkey %>님<br>&nbsp;&nbsp;오늘도 즐거운 하루 되세요.
+  			<input type="button" value="로그아웃" onclick="javascript:location.href='logout.jsp'">
+  			</div>
+  			
+        </div>
+        	
+        
+       <%}%>
 
             <a href="#" class="navbar_togle">
                 <i class="fas fa-sliders-h"></i>
