@@ -21,7 +21,7 @@
 <%
 if(session.getAttribute("key")!=null){
 	Idkey=(String) session.getAttribute("key");
-	System.out.print(Idkey);
+	System.out.printf("Id=%s 세션이 introduce.jsp에 로드되었습니다\n",Idkey);
 	
 }else{
 	Idkey=null;

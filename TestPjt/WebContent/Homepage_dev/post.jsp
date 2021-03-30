@@ -19,7 +19,7 @@
 <%
 if(session.getAttribute("key")!=null){
 	Idkey=(String) session.getAttribute("key");
-	System.out.print(Idkey);
+	System.out.printf("Id=%s 세션이 post.jsp에 로드되었습니다\n",Idkey);
 	
 }else{
 	Idkey=null;
@@ -94,13 +94,18 @@ if(session.getAttribute("key")!=null){
 					<td>파일 찾기</td>
 					<td class="textleft"><input type="file" name="filename" size="50" maxlength="50"></td>
 				</tr>
+				<%if(Idkey!=null) {%>
 				<tr>
 					<td colspan="2" >
 						<input type="submit" value="등록"onclick="javascript:writeCheck();">&nbsp;&nbsp;
 						<input  type="button" value="목록" onclick="javascript:location.href='list.jsp'">
 					</td>
 				</tr>
-					
+			 <%}else{%>
+			 <td colspan="2" >
+						<input  type="button" value="목록" onclick="javascript:location.href='list.jsp'">
+			</td>
+			<%}%>	
 			</table>
 			<input type="hidden" name="ip" value="<%=request.getRemoteAddr() %>">
 		</form>

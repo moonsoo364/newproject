@@ -35,7 +35,7 @@ public class BoardMgr {
 		}
 	}
 
-	
+	//게시판 목록 불러오기
 	public Vector<BoardBean> getBoardList(String keyField, String keyWord,
 			int start, int end) {
 		Connection conn =null; //자바에서 DB로 sql 전송
@@ -50,7 +50,7 @@ public class BoardMgr {
 			System.out.println("DB load Success!");
 			//연동 테스트 끝
 			if(keyWord.equals("null") || keyWord.equals("")) {
-				sql = "select * from tableboard order by ref desc, pos limit ?,?";
+				sql = "select * from tableboard order by num desc, pos limit ?,?";
 				//참조를 기준으로 내림 차순, 포지션의 처음과 마지막까지값만 출력
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setInt(1,start);
