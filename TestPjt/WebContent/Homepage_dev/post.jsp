@@ -65,9 +65,9 @@ if(session.getAttribute("key")!=null){
     <!-- 글쓰기 내용 입니다. -->
     <div class="container" >
 		<h2 class="post">글쓰기</h2>
-		<form name="postform" method="post" action="BoardPost" enctype="multipart/form-data">
-		<!-- multipart/form-data 모든 문자를 인코딩하지 않음  -->
-			<table class= "content_table" cellpadding="3">
+		<form name="postform" method="post" action="BoardPost">
+		
+		<table class= "content_table" cellpadding="3">
 				<tr>
 					<td>제목</td>
 					<td><input name="title" size="50" maxlength="30"></td>
@@ -79,7 +79,7 @@ if(session.getAttribute("key")!=null){
 				</td>
 				<td class="textleft">
     				<select name="sort" style="height:30px;">
-							<option value="공지사항">공지사항</option>
+							<option value="공지">공지사항</option>
 							<option value="잡담">잡담</option>
 							<option value="리뷰">리뷰</option>
 							<option value="이벤트">이벤트</option>
@@ -90,10 +90,7 @@ if(session.getAttribute("key")!=null){
 					<td>내용</td>
 					<td><textarea name="content" rows="10" cols="52"></textarea></td>
 				</tr>
-				<tr>
-					<td>파일 찾기</td>
-					<td class="textleft"><input type="file" name="filename" size="50" maxlength="50"></td>
-				</tr>
+				
 				<%if(Idkey!=null) {%>
 				<tr>
 					<td colspan="2" >
@@ -108,6 +105,7 @@ if(session.getAttribute("key")!=null){
 			<%}%>	
 			</table>
 			<input type="hidden" name="ip" value="<%=request.getRemoteAddr() %>">
+			<input type="hidden" name="id" value="<%=Idkey %>">
 		</form>
 	</div>
    <!-- footer는 모든 페이지에 적용 됩니다.-->

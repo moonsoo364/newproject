@@ -23,9 +23,7 @@ import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 public class BoardMgr {
 
 	private DBConnectionMgr pool;
-	private static final String  SAVEFOLDER = "C:/Temp/fileupload";
-	private static final String ENCTYPE = "UTF-8";
-	private static int MAXSIZE = 5*1024*1024;
+	
 
 	public BoardMgr() {
 		try {
@@ -45,19 +43,18 @@ public class BoardMgr {
 		Vector<BoardBean> vlist =new Vector<BoardBean>();
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			System.out.println("Driver load Success!");
+			System.out.println("게시판 불러오기\n");
 			conn=pool.getConnection();
-			System.out.println("DB load Success!");
 			//연동 테스트 끝
 			if(keyWord.equals("null") || keyWord.equals("")) {
 				sql = "select * from tableboard order by num desc, pos limit ?,?";
-				//참조를 기준으로 내림 차순, 포지션의 처음과 마지막까지값만 출력
+				//번호를 기준으로 내림 차순으로 출력
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setInt(1,start);
 				pstmt.setInt(2,end);
 			} else {
 				sql ="select * from tableboard where " + keyField + "like ?";
-				sql += "ordef by ref desc, pos limit ? .?";
+				sql += "order by num desc, pos limit ? .?";
 				pstmt =conn.prepareStatement(sql);
 				pstmt.setString(1,"%" + keyWord + "%");
 				pstmt.setInt(2, start);
@@ -68,10 +65,11 @@ public class BoardMgr {
 			while(rs.next()) {
 				BoardBean bean = new BoardBean();
 				bean.setNum(rs.getInt("num"));
-				bean.setName(rs.getString("name"));
 				bean.setTitle(rs.getString("title"));
-				bean.setRef(rs.getInt("ref"));
-				bean.setCount(rs.getInt("count"));
+				bean.setPos(rs.getInt("pos"));
+				bean.setSort(rs.getString("sort"));
+				bean.setId(rs.getString("id"));
+				bean.setRegdate(rs.getString("regdate"));
 				bean.setCount(rs.getInt("count"));
 				vlist.add(bean);
 			}
@@ -116,53 +114,34 @@ public class BoardMgr {
 	
 	public void insertBoard(HttpServletRequest req) {
 		//게시판 글쓰기 기능 구현 
-		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql = null;
-		MultipartRequest multi =null; // 파일 업로드를 위한 변수
-		int filesize = 0; //파일 크기
-		String filename = null;
+		String id=req.getParameter("id"),sort=req.getParameter("sort"),title=req.getParameter("title")
+				,content=req.getParameter("content"),ip=req.getParameter("ip");
+		Integer pos=0,count=0;
+		System.out.println(" id: "+id+" sort: "+sort+" title: "+title+" content: "+content+" ip: "+ip+"\n");
+		
+		
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			System.out.println("Driver load Success!");
+			
 			conn=pool.getConnection();
-			System.out.println("DB load Success!");
-			//연동 테스트 끝
-			sql = "select max(num) from tableboard"; //큰 숫자 찾는 sql
-			pstmt = conn.prepareStatement(sql);
-			rs =pstmt.executeQuery();
-			int ref =1;
-			if (rs.next())
-				ref = rs.getInt(1) +1; 
-			File file =new File(SAVEFOLDER); //저장된 폴더 
-			if(!file.exists())
-				file.mkdir();// 파일이 없으면 디렉토리 생성
-			multi = new MultipartRequest(req,SAVEFOLDER,MAXSIZE,ENCTYPE,
-					new DefaultFileRenamePolicy());
-			if(multi.getFilesystemName("filename") != null) {
-				filename =multi.getFilesystemName("filename");//파일 이름을 가지고 온다
-				filesize = (int) multi.getFile("filename").length(); //파일의 크기를 가지고 온다
-			}
-			
-			
-				
 			//sql문으로 파라메터 가지고 오기
-			sql="insert tableboard(sort,title,content,ip,filename,filesize,pos,count,ref)";
-			sql+="values(?,?,?,?,?,?,?,0,0,?)";
+			/* sql="insert tableboard(id,sort,title,content,ip,pos,count)"; */
+			sql="insert into tableboard(id,sort,title,content,ip,pos,count)";
+			sql+="values(?, ?, ?, ?, ?, ?, ?)";
 			pstmt =conn.prepareStatement(sql);
-			pstmt.setString(2, multi.getParameter("sort"));//게시판 분류 가지고옴
-			pstmt.setString(3, multi.getParameter("title"));//게시판 제목을 가지고옴
-			pstmt.setString(4, multi.getParameter("content"));//게시판 내용을 가지고옴
-			pstmt.setString(5, multi.getParameter("ip"));//작성자의 IP를 가지고옴
-			pstmt.setString(6, filename);//파일 이름을 가지고옴
-			pstmt.setInt(7, filesize);//파일 크기를 가지고옴
-			pstmt.setInt(8,ref);//참조할 숫자를 가지고옴
+			pstmt.setString(1, id);
+			pstmt.setString(2, sort);
+			pstmt.setString(3, title);
+			pstmt.setString(4, content);
+			pstmt.setString(5, ip);
+			pstmt.setInt(6, pos);
+			pstmt.setInt(7, count);
 			pstmt.executeUpdate();
-			
-			
-			
+			System.out.print("성공\n");
+				
 			
 		}catch(Exception e) {
 			e.printStackTrace(); //예외 처리
@@ -186,17 +165,12 @@ public class BoardMgr {
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
 				bean.setNum(rs.getInt("num"));
-				bean.setName(rs.getString("name"));
+				bean.setId(rs.getString("id"));
 				bean.setTitle(rs.getString("title"));
 				bean.setContent(rs.getString("content"));
 				bean.setPos(rs.getInt("pos"));
-				bean.setRef(rs.getInt("ref"));
-				bean.setDepth(rs.getInt("depth"));
 				bean.setRegdate(rs.getString("regdate"));
-				bean.setPass(rs.getString("pass"));
 				bean.setCount(rs.getInt("count"));
-				bean.setFilename(rs.getString("filename"));
-				bean.setFilesize(rs.getInt("filesize"));
 				bean.setIp(rs.getString("ip"));
 			}
 		} catch (Exception e) {
@@ -237,13 +211,7 @@ public class BoardMgr {
 			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, num);
 			rs = pstmt.executeQuery();
-			if (rs.next() && rs.getString(1) != null) {
-				if (!rs.getString(1).equals("")) {
-					File file = new File(SAVEFOLDER + "/" + rs.getString(1));
-					if (file.exists())
-						UtilMgr.delete(SAVEFOLDER + "/" + rs.getString(1));
-				}
-			}
+			
 			sql = "delete from tblBoard where num=?";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, num);
@@ -264,7 +232,7 @@ public class BoardMgr {
 			con = pool.getConnection();
 			sql = "update tblBoard set name = ?, title=?, content = ? where num = ?";
 			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, bean.getName());
+			pstmt.setString(1, bean.getId());
 			pstmt.setString(2, bean.getTitle());
 			pstmt.setString(3, bean.getContent());
 			pstmt.setInt(4, bean.getNum());
@@ -285,16 +253,16 @@ public class BoardMgr {
 			con = pool.getConnection();
 			sql = "insert tblBoard (name,content,title,ref,pos,depth,regdate,pass,count,ip)";
 			sql += "values(?,?,?,?,?,?,now(),?,0,?)";
-			int depth = bean.getDepth() + 1;
+			/* int depth = bean.getDepth() + 1; */
 			int pos = bean.getPos() + 1;
 			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, bean.getName());
+			pstmt.setString(1, bean.getId());
 			pstmt.setString(2, bean.getContent());
 			pstmt.setString(3, bean.getTitle());
-			pstmt.setInt(4, bean.getRef());
+			/* pstmt.setInt(4, bean.getRef()); */
 			pstmt.setInt(5, pos);
-			pstmt.setInt(6, depth);
-			pstmt.setString(7, bean.getPass());
+			/* pstmt.setInt(6, depth); */
+			/* pstmt.setString(7, bean.getPass()); */
 			pstmt.setString(8, bean.getIp());
 			pstmt.executeUpdate();
 		} catch (Exception e) {
@@ -328,8 +296,8 @@ public class BoardMgr {
 				JspWriter out, PageContext pageContext) {
 			try {
 				String filename = req.getParameter("filename");
-				File file = new File(UtilMgr.con(SAVEFOLDER + File.separator+ filename));
-				byte b[] = new byte[(int) file.length()];
+				
+				
 				res.setHeader("Accept-Ranges", "bytes");
 				String strClient = req.getHeader("User-Agent");
 				if (strClient.indexOf("MSIE6.0") != -1) {
@@ -341,18 +309,7 @@ public class BoardMgr {
 				}
 				out.clear();
 				out = pageContext.pushBody();
-				if (file.isFile()) {
-					BufferedInputStream fin = new BufferedInputStream(
-							new FileInputStream(file));
-					BufferedOutputStream outs = new BufferedOutputStream(
-							res.getOutputStream());
-					int read = 0;
-					while ((read = fin.read(b)) != -1) {
-						outs.write(b, 0, read);
-					}
-					outs.close();
-					fin.close();
-				}
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
