@@ -1,13 +1,13 @@
 package Board_module;
 
-import java.io.BufferedInputStream;
 
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
+
+
+
+
 import java.sql.Connection;
-import java.sql.DriverManager;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Vector;
@@ -17,8 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 
-import com.oreilly.servlet.MultipartRequest;
-import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
 public class BoardMgr {
 
@@ -36,26 +34,27 @@ public class BoardMgr {
 	//게시판 목록 불러오기
 	public Vector<BoardBean> getBoardList(String keyField, String keyWord,
 			int start, int end) {
-		Connection conn =null; //자바에서 DB로 sql 전송
+		Connection con =null; //자바에서 DB로 sql 전송
 		PreparedStatement pstmt =null;//DB에서 자바로 sql 결과 전송
 		ResultSet rs =null;//sql문 실행 결과
 		String sql =null;//sql 실행 문장
 		Vector<BoardBean> vlist =new Vector<BoardBean>();
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
+			con = pool.getConnection();
 			System.out.println("게시판 불러오기\n");
-			conn=pool.getConnection();
-			//연동 테스트 끝
 			if(keyWord.equals("null") || keyWord.equals("")) {
-				sql = "select * from tableboard order by num desc, pos limit ?,?";
+				sql = "select * from tableboard order by num desc limit ?,?";
 				//번호를 기준으로 내림 차순으로 출력
-				pstmt = conn.prepareStatement(sql);
+				System.out.printf("start:%d, end:%d\n",start,end);
+				System.out.printf("sql:%s\n",sql);
+				pstmt = con.prepareStatement(sql);
+				
 				pstmt.setInt(1,start);
 				pstmt.setInt(2,end);
 			} else {
 				sql ="select * from tableboard where " + keyField + "like ?";
 				sql += "order by num desc, pos limit ? .?";
-				pstmt =conn.prepareStatement(sql);
+				pstmt =con.prepareStatement(sql);
 				pstmt.setString(1,"%" + keyWord + "%");
 				pstmt.setInt(2, start);
 				pstmt.setInt(3, end);
@@ -76,7 +75,7 @@ public class BoardMgr {
 		}catch (Exception e){
 			e.printStackTrace();
 		} finally {
-			pool.freeConnection(conn,pstmt,rs);
+			pool.freeConnection(con,pstmt,rs);
 		}
 		return vlist;
 	}

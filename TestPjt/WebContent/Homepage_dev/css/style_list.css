@@ -52,10 +52,14 @@
 	text-align: center;
 	
 }
+#pageing{
+	color:black;
+}
 .move{
 	font-size:20px;
 	color:black;
 }
+
 
 /*------찾기 영역------*/
 .search_bar{
@@ -69,3 +73,4 @@ input,select{
 	height:25px;	
 
 }
+

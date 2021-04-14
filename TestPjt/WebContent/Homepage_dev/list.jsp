@@ -6,25 +6,33 @@
 <%@page import="java.util.Vector" %>
 <jsp:useBean id="Bmgr" class="Board_module.BoardMgr"/>
 <%
-	request.setCharacterEncoding("UTF-8");
-	
+request.setCharacterEncoding("UTF-8");
+
 	int totalRecord=0; //전체 레코드 수
 	int numPerPage=10; //페이지 당 레코드 수
-	int nowPage=1;//현재 페이지
+	int pagePerBlock=12;
+	
+	
+	
 	int totalPage=0;//전체 페이지 수
+	int totalBlock=0;
+	
+	int nowPage=1;//현재 페이지
+	int nowBlock=1;//현재블럭
 	
 	int start=0; //DB에서 select 시작 번호
 	int end=10;	 //시작 번호에서 가져올 select의 갯수
 	
 	int listSize=0; //현재 읽어온 게시물의 갯수
-	
-	String value=null;
+
+
 	String keyField="", keyWord=""; //DB에서 필드명 
 	Vector<BoardBean> vlist =null;
+	
 	if(request.getParameter("keyword")!=null){
-		keyWord =request.getParameter("keyWord");
-		keyField=request.getParameter("keyField");
-	}//키워드와 키필드를 요구한다
+		keyWord =request.getParameter("keyWord");//찾는 단어
+		keyField=request.getParameter("keyField");//찾는 범위 작성자,제목,내용
+	}
 	
 	if(request.getParameter("reload")!=null){
 		if(request.getParameter("reload").equals("true")){
@@ -40,7 +48,10 @@
 	
 	totalRecord = Bmgr.getTotalCount(keyField, keyWord);
 	totalPage = (int)Math.ceil((double)totalRecord / numPerPage); //전체 페이지 수
+	nowBlock =(int)Math.ceil((double)nowPage/pagePerBlock);
 	
+	totalBlock =(int)Math.ceil((double)totalPage / pagePerBlock);
+
 	
 	
 %>
@@ -54,12 +65,21 @@
     <link rel="stylesheet" href="css/style_index.css">
     <script src="https://use.fontawesome.com/releases/v5.15.1/js/all.js" ></script>
     <script src="javascript/main.js" defer></script>
+    <script src="javascript/list.js" defer></script>
     <link rel="stylesheet" href="css/style_list.css">
     <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
+    <script type="text/javascript">
+    function block(value){
+    	document.readFrm.nowPage.value=<%=pagePerBlock%>*(value-1)+1;
+    	document.readFrm.submit();
+    }
+    </script>
+    
 </head>
 <body>
-<%!String Idkey=null; %>
+
 <%
+String Idkey=null;
 if(session.getAttribute("key")!=null){
 	Idkey=(String) session.getAttribute("key");
 	System.out.printf("Id=%s 세션이 list.jsp에 로드되었습니다\n",Idkey);
@@ -67,7 +87,6 @@ if(session.getAttribute("key")!=null){
 }else{
 	Idkey=null;
 }
-
 %>
 <!-- navbar는 모든 페이지에 적용 됩니다.-->
     <nav class="navbar">
@@ -137,44 +156,55 @@ if(session.getAttribute("key")!=null){
 	    		  		int num = bean.getNum();//게시물 번호 찾기
 	    		  		String sort = bean.getSort();//게시물 분류 찾기
 	    		  		String title = bean.getTitle();//게시물 번호 찾기
-	    		  		String name = bean.getName();//작성자 찾기
+	    		  		String id = bean.getId();//작성자 찾기
 	    		  		int count =bean.getCount();//조회수 찾기
 	    		  
 	    		%>
 	    		<tr>	
 	    		<td><%=totalRecord -((nowPage-1)*numPerPage)-i %></td>
 	    		<td><%=sort %></td>
-	    		<td><%=title %>	    		
+	    		<td><%=title %></td>
+	    		<td><%=id %></td>	    		
 	    		<td><%=count %></td>
 	    		</tr>
 	    	<%}//for %>
 	    <%}//if %>
-	    
-	   </td>
-	  </tr>
-	    		
-	    	
-	    	
-	    		
-    	</table>
-    	<div class="bottom_content">
-    	<%if(session.getAttribute("key")!=null){%>
+	    	</td>
+	    </tr>
+	 </table>
+    	
+		<div class="bottom_content">
+		<!-- 하단 페이징 처리 -->
+		<%if(session.getAttribute("key")!=null){%>
 		
     	<a href="post.jsp" class="board_post">글쓰기</a> 
     	
     	<%}%>
-    	 <a class="move" href="#">&nbsp; &lt;이전 </a>
-    	<script language="Javascript">
-
-			for(i = 1; i <=10; i++){  // 변수 i 의 값이 1부터 시작해서 10보다 크게 될때까지 계속 순환문 작동
-		
-			document.write(i+"&nbsp");
-		
-			}
-
-		</script>
-    	 <a class="move" href="#"> 다음&gt;&nbsp; </a>
-    	<a href="list.jsp" class="board_post">처음으로</a> 
+    	 
+		<%
+			int pageStart = (nowBlock-1)*pagePerBlock+1;//하단페이지 시작 번호
+			int pageEnd = ((pageStart+pagePerBlock) <=totalPage) ? (pageStart + pagePerBlock) : totalPage+1;
+			//하단 페이지 번호    
+			if(totalPage !=0){
+				if(nowBlock>1){%>
+					<a id="pageing" href="javascript:block('<%=nowBlock-1 %>')">prev...</a> <%}%>&nbsp;
+					
+					<%for (;pageStart < pageEnd; pageStart++) {%>
+					<a href="javascroipt:pageing('<%=pageStart %>')">
+					<%if(pageStart==nowPage) {%><font color="blue">
+					<%}else%><font color="black">
+					[<%=pageStart %>]
+					</font></font></a><%} //for %>&nbsp;
+					
+					<%if (totalBlock>nowBlock) {%>
+					<a href="javascript:block('<%=nowBlock+1%>')">.....next</a>
+					<%}%>&nbsp;
+				<%}%>
+			<!-- 페이징 및 블럭 처리 End -->
+			
+			<a href="list.jsp" class="board_post">처음으로</a> 
+			</div>
+    	
     	</div>
     	<div class="search_bar">
     		<table>
@@ -196,7 +226,7 @@ if(session.getAttribute("key")!=null){
     			</tr>
     		</table>
     	</div>
-    </div>
+   
     
   <!-- footer는 모든 페이지에 적용 됩니다.-->
 	<footer class="footer_style">
@@ -210,5 +240,15 @@ if(session.getAttribute("key")!=null){
 	 		</div>			
 		</div>
 	</footer>
+	<form name="listFrm" method="post">
+		<input type="hidden" name="reload" value="true">
+		<input type="hidden" name="nowPage" value="1">
+	</form>
+	<form name="readFrm" method="get">
+		<input type="hidden" name="num">
+		<input type="hidden" name="nowpage" value="<%=nowPage%>">
+		<input type="hidden" name="keyField" value="<%=keyField%>">
+		<input type="hidden" name="keyWord" value="<%=keyWord%>">
+	</form>
 </body>
 </html>
